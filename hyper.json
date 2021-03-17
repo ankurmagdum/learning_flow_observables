@@ -1,0 +1,10 @@
+{
+    "optimizers" : ["adam"],
+    "losses" : ["mean_squared_error","mean_absolute_error"],
+    "layers" : [4],
+    "neurons_per_layer" : [10],
+    "activations" : ["relu"],
+    "epochs" : [1000],
+    "learning_rates" : [0.01],
+    "retrainings" : [5]
+}

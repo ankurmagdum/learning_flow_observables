@@ -10,7 +10,10 @@ from src import *
 
 
 def get_training_command(size, rep, conf, force):
-    
+   
+    if not os.path.exists('./models/'):
+        os.mkdir('./models/')
+
     model_file = 'model_'+force+'_S{:02d}R{:02d}C{:05d}.h5'.format(size,rep,conf.id)
     loss_file  = 'loss_'+force+'_S{:02d}R{:02d}C{:05d}.txt'.format(size,rep,conf.id)
     

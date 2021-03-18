@@ -3,7 +3,10 @@ import tensorflow as tf
 import numpy as np
 
 def predict(size, rep, conf, force):
-    
+   
+    if os.path.exists('./predictions/'):
+        os.mkdir('./predictions')
+
     model_file = 'model_'+force+'_S{:02d}R{:02d}C{:05d}.h5'.format(size,rep,conf.id)
     model = tf.keras.models.load_model('./models/'+model_file)
 

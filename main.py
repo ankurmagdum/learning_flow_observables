@@ -72,12 +72,12 @@ if __name__ == "__main__":
 
     for conf, force in [(p,q) for p in configs for q in ['lifts','drags']]:
     
-        for size, rep in [(x,y) for x in range(sizes) for y in range(reps)]:
+        if conf.id % nprocs == rank:
         
-            if conf.id % nprocs == rank:
+            for size, rep in [(x,y) for x in range(sizes) for y in range(reps)]:
             
                 train(size, rep, conf, force)
                 predict(size, rep, conf, force)
 
-        compute_error_statistics(sizes, reps, conf, force)
+            compute_error_statistics(sizes, reps, conf, force)
                 

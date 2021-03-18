@@ -7,7 +7,7 @@ class hyperparameterConfiguration:
 
         with open('hyper.json','r') as f:
             
-            self.all_hyperparameters = json.load(f)
+            self.hyperparameters = json.load(f)
             f.close()
         
         with open('training_parameters.json','r') as f:
@@ -15,12 +15,11 @@ class hyperparameterConfiguration:
             self.training_parameters = json.load(f)
             f.close()
 
-        self.hyperparameter_vals = self.all_hyperparameters.values()
         self.total = 0
         self.rank = rank
         self.all_config_files = []
         
-        for conf_id, conf in enumerate(product(*self.hyperparameter_vals)):
+        for conf_id, conf in enumerate(product(*self.hyperparameters.values())):
             
             self.training_parameters['optimizer'] = conf[0]
             self.training_parameters['loss'] = conf[1]
@@ -67,6 +66,6 @@ class hyperparameterConfiguration:
 
         def __init__(self, idx, filename):
 
-            self.idx = idx
-            self.filename = filename
+            self.id = idx
+            self.file = filename
 

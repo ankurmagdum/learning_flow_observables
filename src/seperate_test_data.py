@@ -16,7 +16,7 @@ def seperate_test_data(parameters, lifts, drags, sizes, reps, test_fraction = 1/
     a = int(test_fraction * N)
     indices = np.array(range(N))
     
-    test = indices[list(range(a))]
+    test  = indices[list(range(a))]
     train = indices[list(range(a,N))]
 
     test_p,  test_l,  test_d  = parameters[test],  lifts[test],  drags[test]

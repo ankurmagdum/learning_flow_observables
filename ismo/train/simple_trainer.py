@@ -98,17 +98,14 @@ class SimpleTrainer(object):
                  model):
 
         self.retrainings = training_parameters.retrainings
-
         self.optimizer = training_parameters.optimizer
         self.learning_rate = training_parameters.learning_rate
-
+        self.activation = training_parameters.activation
         self.epochs = training_parameters.epochs
-
         self.model = model
-
         self.loss = training_parameters.loss
-
         self.callbacks = []
+        
         if training_parameters.should_use_early_stopping:
             self.callbacks.append(
                 tensorflow.keras.callbacks.EarlyStopping(monitor='loss', patience=training_parameters.early_stopping_patience))
@@ -128,7 +125,6 @@ class SimpleTrainer(object):
             if self.optimizer == 'lbfgs':
 
                 func = function_factory(self.model, tf.keras.losses.MeanSquaredError(), np.float32(parameters), np.float32(values))
-            
                 init_params = tf.dynamic_stitch(func.idx, self.model.trainable_variables)
             
                 results = tfp.optimizer.lbfgs_minimize(value_and_gradients_function=func,  
@@ -136,7 +132,6 @@ class SimpleTrainer(object):
                    x_tolerance=1.0 * np.finfo(float).eps, f_relative_tolerance=1.0 * np.finfo(float).eps)
             
                 func.assign_new_model_parameters(results.position)
-
                 loss = func.history[-1]
                 tf.print(loss)
 
@@ -175,14 +170,18 @@ class SimpleTrainer(object):
             biases = np.zeros_like(layer.get_weights()[1])
 
             if hasattr(layer, 'kernel_initializer'):
-                #weights = layer.kernel_initializer(weights.shape)
-                initializer = tf.keras.initializers.GlorotNormal()
-                weights = initializer(weights.shape)
+                if self.activation == 'tanh':
+                    initializer = tf.keras.initializers.GlorotNormal()
+                    weights = initializer(weights.shape)
+                else:
+                    weights = layer.kernel_initializer(weights.shape)
 
             if hasattr(layer, 'bias_initializer'):
-                #biases = layer.bias_initializer(biases.shape)
-                initializer = tf.keras.initializers.GlorotNormal()
-                biases = initializer(biases.shape)
+                if self.activation == 'tanh':
+                    initializer = tf.keras.initializers.GlorotNormal()
+                    biases = initializer(biases.shape)
+                else:
+                    biases = layer.bias_initializer(biases.shape)
 
             layer.set_weights((weights, biases))
         
